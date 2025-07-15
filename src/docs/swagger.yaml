@@ -1,0 +1,297 @@
+openapi: 3.0.3
+info:
+  title: Lead API Specification
+  version: '92'
+  description: API documentation for the Lead bounded context.
+servers:
+  - url: http://localhost:3000/api/v1
+    description: Development Server
+tags:
+  - name: Lead
+    description: Operations related to the Lead bounded context.
+paths:
+  /create-lead:
+    post:
+      summary: Create Lead
+      description: Executes the "Create Lead" command. ...
+      operationId: createLead
+      tags:
+        - Lead
+      responses:
+        '201':
+          description: 'Created: The resource was created successfully.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Lead'
+        '202':
+          description: 'Accepted: The command has been accepted for processing.'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateLeadRequest'
+  /update-lead-status/{leadID}:
+    put:
+      summary: Update Lead Status
+      description: Executes the "Update Lead Status" command. ...
+      operationId: updateLeadStatus
+      tags:
+        - Lead
+      responses:
+        '200':
+          description: 'OK: The resource was updated successfully.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Lead'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      parameters:
+        - $ref: '#/components/parameters/LeadId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateLeadStatusRequest'
+  /approve-lead:
+    post:
+      summary: Approve Lead
+      description: Executes the "Approve Lead" command. ...
+      operationId: approveLead
+      tags:
+        - Lead
+      responses:
+        '201':
+          description: 'Created: The resource was created successfully.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Lead'
+        '202':
+          description: 'Accepted: The command has been accepted for processing.'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ApproveLeadRequest'
+  /fetch-new-leads:
+    get:
+      summary: Fetch New Leads
+      description: Retrieves data based on the "Fetch New Leads" query. This is a synchronous query operation.
+      operationId: fetchNewLeads
+      tags:
+        - Lead
+      responses:
+        '200':
+          description: Successful retrieval of data.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Lead'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /get-lead-details:
+    get:
+      summary: Get Lead Details
+      description: Retrieves data based on the "Get Lead Details" query. This is a synchronous query operation.
+      operationId: getLeadDetails
+      tags:
+        - Lead
+      responses:
+        '200':
+          description: Successful retrieval of data.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Lead'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /get-lead-approval-status:
+    get:
+      summary: Get Lead Approval Status
+      description: Retrieves data based on the "Get Lead Approval Status" query. This is a synchronous query operation.
+      operationId: getLeadApprovalStatus
+      tags:
+        - Lead
+      responses:
+        '200':
+          description: Successful retrieval of data.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Lead'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+components:
+  schemas:
+    Error:
+      type: object
+      properties:
+        message:
+          type: string
+          example: An error occurred.
+        code:
+          type: string
+          example: ERROR_CODE
+    Lead:
+      type: object
+      description: Represents a Lead in the system.
+      properties:
+        leadID:
+          type: string
+          description: The Lead ID of the Lead.
+          example: L001
+        leadName:
+          type: string
+          description: The Lead Name of the Lead.
+          example: John Doe
+        contactEmail:
+          type: string
+          description: The Contact Email of the Lead.
+          example: john@example.com
+        contactPhone:
+          type: string
+          description: The Contact Phone of the Lead.
+          example: 123-456-7890
+        companyName:
+          type: string
+          description: The Company Name of the Lead.
+          example: Acme Corp
+        leadSource:
+          type: string
+          description: The Lead Source of the Lead.
+          example: Web
+        newStatus:
+          type: string
+          description: The New Status of the Lead.
+          example: Contacted
+        followUpDate:
+          type: string
+          description: The Follow-up Date of the Lead.
+          example: '2023-11-01'
+        notes:
+          type: string
+          description: The Notes of the Lead.
+          example: Followed up
+        approvalStatus:
+          type: string
+          description: The Approval Status of the Lead.
+          example: Approved
+        approvalDate:
+          type: string
+          description: The Approval Date of the Lead.
+          example: '2023-10-15'
+        comments:
+          type: string
+          description: The Comments of the Lead.
+          example: Looks promising
+      required:
+        - leadID
+        - leadName
+        - contactEmail
+        - contactPhone
+        - companyName
+        - leadSource
+    CreateLeadRequest:
+      type: object
+      properties:
+        leadName:
+          type: string
+          example: John Doe
+        contactEmail:
+          type: string
+          example: john@example.com
+        contactPhone:
+          type: string
+          example: 123-456-7890
+        companyName:
+          type: string
+          example: Acme Corp
+        leadSource:
+          type: string
+          example: Web
+      required:
+        - leadName
+        - contactEmail
+        - contactPhone
+        - companyName
+        - leadSource
+    UpdateLeadStatusRequest:
+      type: object
+      properties:
+        newStatus:
+          type: string
+          example: Contacted
+        followUpDate:
+          type: string
+          example: '2023-11-01'
+        notes:
+          type: string
+          example: Followed up
+    ApproveLeadRequest:
+      type: object
+      properties:
+        approvalStatus:
+          type: string
+          example: Approved
+        approvalDate:
+          type: string
+          example: '2023-10-15'
+        comments:
+          type: string
+          example: Looks promising
+  parameters:
+    LeadId:
+      name: leadID
+      in: path
+      required: true
+      description: The unique identifier for the Lead.
+      schema:
+        type: string
+  responses:
+    BadRequest:
+      description: 'Bad Request: The server cannot or will not process the request due to something that is perceived to be a client error.'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    NotFound:
+      description: 'Not Found: The server can not find the requested resource.'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    InternalServerError:
+      description: 'Internal Server Error: The server has encountered a situation it doesn''t know how to handle.'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
